@@ -29,15 +29,18 @@ class Name(Field): # клас для імені
 
 class Phone(Field): # клас для телефону
     def __init__(self, value):
-         super().__init__(value)
-         self._validate(value)
+        value = str(value)
+        self._validate(value)
+        super().__init__(value)
 
     def _validate(self, value): # метод для валідації телефону
         if not isinstance(value, str):
             raise ValueError("Phone number must be a string")
         if len(value) != 10:
             raise ValueError("Phone number must be exactly 10 digits long")
-              
+        if not value.isdigit():
+            raise ValueError("Phone must contain only digits")
+        
 
 
 class Birthday(Field):
@@ -59,7 +62,7 @@ class Record: # клас для запису контакту
     def add_birthday(self, birthday_str: str):
         self.birthday = Birthday(birthday_str)
 
-    def add_phone(self, phone_str: str):
+    def add_phone(self, phone_str: str | Phone):
         phone = Phone(phone_str)
         self.phones.append(phone)
 
@@ -71,13 +74,12 @@ class Record: # клас для запису контакту
             raise ValueError("Phone not found")
 
     def edit_phone(self, old_phone_str: str, new_phone_str: str): # метод для редагування телефону
-        old = self.find_phone(old_phone_str)
-
-        if old is None:
-            raise ValueError("Old phone not found")
+        if self.find_phone(old_phone_str) is None:
+           raise ValueError("Old phone not found")
         
+        new_phone = Phone(new_phone_str)
         self.remove_phone(old_phone_str)
-        self.add_phone(new_phone_str)
+        self.add_phone(new_phone)
 
     def find_phone(self, phone_str: str): # метод для пошуку телефону
         for p in self.phones:
@@ -130,7 +132,7 @@ class AddressBook(UserDict): # клас для адресної книги
                     result.append({"name": record.name.value, "birthday": bday_this_year.strftime("%d.%m.%Y")})
 
         return result
-
+    
     
     def __str__(self): # метод для виведення адресної книги
         return '\n'.join(str(record) for record in self.data.values())

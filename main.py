@@ -56,7 +56,6 @@ def add_contact(args, book: AddressBook):
         record.add_phone(phone)
     return message
 
-
 @input_error
 def change_phone(args, book: AddressBook):
     name, old_phone, new_phone = args
@@ -104,7 +103,7 @@ def load_data(filename="addressbook.pkl"): # завантаження даних
     try:
         with open(filename, "rb") as f:
             return pickle.load(f)
-    except FileNotFoundError:
+    except (FileNotFoundError, EOFError):
         return AddressBook()
 
 
