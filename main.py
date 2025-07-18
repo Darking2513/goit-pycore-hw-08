@@ -1,4 +1,4 @@
-from classes import AddressBook, Record, Phone, Birthday, Name, Field
+from classes import AddressBook, Record, Phone, Birthday, ConsoleView
 import pickle
 
 def input_error(func): # декоратор для обробки помилок введення
@@ -109,43 +109,44 @@ def load_data(filename="addressbook.pkl"): # завантаження даних
 
 def main():
     book = load_data()
+    view = ConsoleView()
     print("Welcome to the assistant bot!")
 
     while True:
-        user_input = input("Enter a command: ")
+        user_input = view.input("Enter a command: ")
         command, args = parse_input(user_input)
 
         if command in ["close", "exit"]:
             save_data(book)
-            print("Good bye!")
+            view.display("Good bye!")
             break
 
         elif command == "hello":
-            print("How can I help you?")
+            view.display("How can I help you?")
 
         elif command == "add":# додавання контакту
-            print(add_contact(args, book))
+            view.display(add_contact(args, book))
 
         elif command == "change":#змінити телефон
-            print(change_phone(args, book))
+            view.display(change_phone(args, book))
 
         elif command == "phone":# отримання телефону
-            print(phone(args, book))
+            view.display(phone(args, book))
 
         elif command == "all":# виведення всіх контактів
-            print(show_all(book))
+            view.display(show_all(book))
 
         elif command == "add-birthday":# додавання дня народження
-            print(add_birthday(args, book))
+            view.display(add_birthday(args, book))
 
         elif command == "show-birthday":# відображення народження
-            print(show_birthday(args, book))
+            view.display(show_birthday(args, book))
 
         elif command == "birthdays":# відображення найближчих днів народження
-            print(birthdays(book))
+            view.display(birthdays(book))
 
         else:
-            print("Invalid command.")
+            view.display("Invalid command.")
 
 if __name__ == "__main__":
     main()

@@ -1,6 +1,23 @@
 from collections import UserDict
 from datetime import datetime, timedelta
+from abc import ABC, abstractmethod
 
+class Viev(ABC):
+    @abstractmethod
+    def display(self, message: str):
+        pass
+
+    @abstractmethod
+    def input(self, prompt: str):
+        pass
+
+class ConsoleView(Viev):
+    def display(self, message: str):
+        print(message)
+    
+    def input(self, prompt: str) -> str:
+        return input(prompt)
+        
 
 class Field: # базовий клас
     def __init__(self, value):
